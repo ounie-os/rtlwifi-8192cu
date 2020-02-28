@@ -10,4 +10,8 @@ rtl8192cu-objs :=		\
 		table.o		\
 		trx.o
 
-obj-$(CONFIG_RTL8192CU) += rtl8192cu.o
+obj-m += rtl8192cu.o
+
+ccflags-y += -Idrivers/net/wireless/rtlwifi -D__CHECK_ENDIAN__
+
+

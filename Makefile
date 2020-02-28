@@ -47,8 +47,9 @@ ccflags-y += -D__CHECK_ENDIAN__
 
 all:
 	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(shell pwd)  modules
-
-mod_install:
+	find . -name '*.ko' | xargs $(CROSS_COMPILE)strip --strip-unneeded
+	
+install:
 	[ -d $(MOD_INSTALL_PATH) ] || mkdir -p $(MOD_INSTALL_PATH)
 	mkdir -p $(MOD_INSTALL_PATH)/rtl8192c
 	mkdir -p $(MOD_INSTALL_PATH)/rtl8192cu
@@ -56,8 +57,9 @@ mod_install:
 	install -p -D -m 644 rtlwifi.ko $(MOD_INSTALL_PATH)
 	install -p -D -m 644 ./rtl8192c/rtl8192c-common.ko $(MOD_INSTALL_PATH)/rtl8192c
 	install -p -D -m 644 ./rtl8192cu/rtl8192cu.ko $(MOD_INSTALL_PATH)/rtl8192cu
-
-install: all
+	[ -z $(INSTALL_MOD_PATH) ] || $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(shell pwd) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
+	
+install_old: all
 ifeq (,$(wildcard ./backup_drivers.tar))
 	@echo Making backups
 	@tar cPf backup_drivers.tar $(MODDESTDIR)
