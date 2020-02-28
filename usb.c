@@ -631,8 +631,10 @@ static void _rtl_rx_completed(struct urb *_urb)
 
 		qlen = skb_queue_len(&rtlusb->rx_queue);
 		if (qlen >= __RX_SKB_MAX_QUEUED) {
+#if 0
 			pr_err("Pending RX skbuff queue full! (qlen: %d)\n",
 			       qlen);
+#endif
 			goto resubmit;
 		}
 
